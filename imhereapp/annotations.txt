@@ -1,0 +1,26 @@
+gDensidade de pixel:
+
+Quanto maior a densidade, mais detalhes é possível visualizar.
+Quanto mais perto, maior a densidade de pixels.
+
+Independência de densidade:
+
+Renderiza os elementos de uma forma independente das características e densidades de cada dispositivo.
+Android: DPI
+iOS: Points
+
+Diferença entre ScrollView e FlatList:
+
+- ScrollView carrega todos os elementos, mesmo se não estiverem visíveis na tela.
+- A FlatList só renderiza o que é exibido em tela.
+
+ScrollView é recomendada para listagem menor de itens (menus).
+
+Renderizações:
+
+Render: Antes dos componentes serem exibidos nas telas, eles devem ser renderizados pelo React.
+
+O componente será renderizado:
+
+- Na renderização inicial do componente.
+- Quando o estado do componente mudou.

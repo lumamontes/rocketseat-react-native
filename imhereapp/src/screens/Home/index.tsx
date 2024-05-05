@@ -1,13 +1,38 @@
-import { StatusBar } from "expo-status-bar";
-
 import { styles } from "./styles";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Alert, FlatList, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Participant from "../../components/Participant";
+import { useState } from "react";
 
 export default function Home() {
+
+  const [participants, setParticipants] = useState<string[]>([]);
+  const [participantName, setParticipantName] = useState('');
+
   function handleAddParticipant() {
-    console.log("Adicionar participante");
+    if(participants.includes(participantName)) {
+      return Alert.alert("Participante já adicionado", `${participantName} já está na lista de presença`);
+    }
+
+    setParticipants([...participants, participantName]);
+    setParticipantName('');
   }
+
+  function handleRemoveParticipant(name: string) {
+    Alert.alert("Remover participante", `Deseja remover ${name} da lista de presença?`, [
+      {
+        text: "Não",
+        style: "cancel"
+      },
+      {
+        text: "Sim",
+        onPress: () => {
+          setParticipants(participants.filter(participant => participant !== name));
+          Alert.alert("Participante removido", `${name} foi removida da lista de presença`)
+        }
+      }
+    ])
+  }
+
 
   return (
     <View style={styles.container}>
@@ -19,6 +44,8 @@ export default function Home() {
           style={styles.input}
           placeholder="Nome do participante"
           placeholderTextColor={"#6b6b6b"}
+          onChangeText={setParticipantName}
+          value={participantName}
         />
         <TouchableOpacity
           activeOpacity={0.7}
@@ -28,12 +55,18 @@ export default function Home() {
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>
-
-      <Participant />
-      <Participant />
-      <Participant />
-
-      <StatusBar style="auto" />
+    <FlatList
+      data={participants}
+      showsVerticalScrollIndicator={false}
+      renderItem={
+        ({item}) => <Participant name={item} onRemove={() => handleRemoveParticipant(item)}/>
+      }
+      keyExtractor={(item) => item}
+      ListEmptyComponent={() => 
+        <Text style={styles.listEmptyText}>
+          Ninguém chegou no evento ainda? Adicione participantes a sua lista de presença
+          </Text>}
+    />
     </View>
   );
 }
